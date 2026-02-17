@@ -14,7 +14,11 @@ public class Main{
 class Buttons{
     boolean[][] ButtonState;
     JButton[][] Button;
-    public Buttons(int PositionX, int PositionY, JPanel Panel, int ButtonAmount){
+    JPanel Panel;
+    int ButtonAmount;
+    public Buttons(int PositionX, int PositionY, JPanel TemporaryPanel, int TemporaryButtonAmount){
+        Panel = TemporaryPanel;
+        ButtonAmount = TemporaryButtonAmount;
         Button = new JButton[ButtonAmount][ButtonAmount];
         ButtonState = new boolean[ButtonAmount][ButtonAmount];
         for (int j = 0; j < ButtonAmount; j++) {
@@ -55,10 +59,21 @@ class Buttons{
             Button[x][y].setBackground(new Color(0x249A11));
         } else Button[x][y].setBackground(new Color(0x686868));
     }
+
+    public void DeleteButtons(){
+        for(int i = 0; i < ButtonAmount; i++) {
+            for(int j = 0; j < ButtonAmount; j++) {
+                Panel.remove(Button[i][j]);
+            }
+        }
+        Panel.revalidate();
+        Panel.repaint();
+    }
 }
 
 class Window{
     int ButtonAmount;
+    JButton Settings;
     JButton Apply;
     Buttons Squares;
     JFrame Frame;
@@ -80,7 +95,7 @@ class Window{
         TextPanel.setFocusable(true);
         Layers.add(TextPanel, JLayeredPane.PALETTE_LAYER);
 
-        Text TextBlock = new Text(TextPanel);
+        Text TextBlock = new Text(TextPanel, 48, 57);
 
         ButtonPanel = new JPanel(null);
         ButtonPanel.setBackground(new Color(0x454545));
@@ -104,10 +119,24 @@ class Window{
                 Layers.setLayer(TextPanel, JLayeredPane.DEFAULT_LAYER);
                 Layers.setLayer(ButtonPanel, JLayeredPane.PALETTE_LAYER);
 
+                Squares.DeleteButtons();
+
                 Squares = new Buttons(150, 150, ButtonPanel, ButtonAmount);
             }
         });
         TextPanel.add(Apply);
+
+        Settings = new JButton("Set");
+        Settings.setBounds(10, 10, 50, 50);
+        Settings.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Layers.setLayer(TextPanel, JLayeredPane.PALETTE_LAYER);
+                Layers.setLayer(ButtonPanel, JLayeredPane.DEFAULT_LAYER);
+                TextPanel.requestFocusInWindow();
+            }
+        });
+        ButtonPanel.add(Settings);
 
         Frame.setVisible(true);
     }
@@ -116,7 +145,7 @@ class Text{
     JLabel TextLabel;
     String TextInput;
     char Key;
-    public Text(JPanel Back){
+    public Text(JPanel Back, int FirstKey, int LastKey){
         TextLabel = new JLabel();
         TextInput = "";
         Back.add(TextLabel);
@@ -128,7 +157,7 @@ class Text{
                     if (!Objects.equals(TextInput, "")){
                         TextInput = TextInput.substring(0, TextInput.length() - 1);
                     }
-                }else if(Key >= 32 && Key <= 126){
+                }else if(Key >= FirstKey && Key <= LastKey){
                     TextInput = TextInput + Key;
                 }
                 TextLabel.setText(TextInput);
