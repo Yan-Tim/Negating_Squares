@@ -111,7 +111,7 @@ class Window{
                 boolean ValidInput = false;
                 while(!ValidInput) {
                     try {
-                        ButtonAmount = Integer.parseInt(TextBlock.GetText());
+                        ButtonAmount = Integer.parseInt(TextBlock.getText());
                         ValidInput = true;
                     } catch (NumberFormatException _) {
                     }
@@ -131,6 +131,7 @@ class Window{
         Settings.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                TextBlock.setText("");
                 Layers.setLayer(TextPanel, JLayeredPane.PALETTE_LAYER);
                 Layers.setLayer(ButtonPanel, JLayeredPane.DEFAULT_LAYER);
                 TextPanel.requestFocusInWindow();
@@ -164,7 +165,11 @@ class Text{
             };
         });
     }
-    public String GetText(){
+    public String getText(){
         return TextInput;
+    }
+    public void setText(String x){
+        TextInput = x;
+        TextLabel.setText(x);
     }
 }
