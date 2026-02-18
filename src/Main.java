@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Objects;
+import java.util.Random;
 
 public class Main{
     public static void main(String[] args){
@@ -69,9 +70,21 @@ class Buttons{
         Panel.revalidate();
         Panel.repaint();
     }
+
+    public void Randomize(){
+        Random Chance = new Random();
+        for(int i = 0; i < ButtonAmount; i++){
+            for(int j =0; j < ButtonAmount; j++){
+                if(1 == Chance.nextInt(2)){
+                    ButtonPress(i, j);
+                }
+            }
+        }
+    }
 }
 
 class Window{
+    JButton Randomize;
     int ButtonAmount;
     JButton Settings;
     JButton Apply;
@@ -127,7 +140,7 @@ class Window{
         TextPanel.add(Apply);
 
         Settings = new JButton("Set");
-        Settings.setBounds(10, 10, 50, 50);
+        Settings.setBounds(10, 10, 80, 80);
         Settings.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -138,6 +151,16 @@ class Window{
             }
         });
         ButtonPanel.add(Settings);
+
+        Randomize = new JButton();
+        Randomize.setBounds(480, 10, 80, 80);
+        Randomize.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Squares.Randomize();
+            }
+        });
+        ButtonPanel.add(Randomize);
 
         Frame.setVisible(true);
     }
