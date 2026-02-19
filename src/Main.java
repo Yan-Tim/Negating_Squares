@@ -17,8 +17,14 @@ class Buttons{
     JButton[][] Button;
     JPanel Panel;
     int ButtonAmount;
+    int Clicks;
+    JLabel ClicksLabel;
     public Buttons(int PositionX, int PositionY, JPanel TemporaryPanel, int TemporaryButtonAmount){
         Panel = TemporaryPanel;
+        Clicks = 0;
+        ClicksLabel = new JLabel(String.valueOf(Clicks));
+        ClicksLabel.setBounds(PositionX, PositionY, 20, 20);
+        Panel.add(ClicksLabel);
         ButtonAmount = TemporaryButtonAmount;
         Button = new JButton[ButtonAmount][ButtonAmount];
         ButtonState = new boolean[ButtonAmount][ButtonAmount];
@@ -34,22 +40,12 @@ class Buttons{
                     public void actionPerformed(ActionEvent e) {
                         int ButtonX = CurrentButtonX;
                         int ButtonY = CurrentButtonY;
-                        ButtonPress(ButtonX, ButtonY);
-                        try {
-                            ButtonPress(ButtonX + 1, ButtonY);
-                        } catch (IndexOutOfBoundsException ex) {}
-                        try {
-                            ButtonPress(ButtonX - 1, ButtonY);
-                        } catch (IndexOutOfBoundsException ex) {}
-                        try {
-                            ButtonPress(ButtonX, ButtonY + 1);
-                        } catch (IndexOutOfBoundsException ex) {}
-                        try {
-                            ButtonPress(ButtonX, ButtonY - 1);
-                        } catch (IndexOutOfBoundsException ex){}
+                        CorrectButtonPress(ButtonX, ButtonY);
                     }
                 });
-                Button[i][j].setBounds(PositionX+((300/ ButtonAmount)*i), PositionY+((300/ ButtonAmount)*j), (300/ ButtonAmount), (300/ ButtonAmount));
+                Button[i][j].setBounds(PositionX+((300/ ButtonAmount)*i),
+                        PositionY+((300/ ButtonAmount)*j)+20,
+                        (300/ ButtonAmount), (300/ ButtonAmount));
                 Panel.add(Button[i][j]);
             }
         }
@@ -60,6 +56,25 @@ class Buttons{
             Button[x][y].setBackground(new Color(0x249A11));
         } else Button[x][y].setBackground(new Color(0x686868));
     }
+    public void CorrectButtonPress(int ButtonX, int ButtonY){
+        ButtonPress(ButtonX, ButtonY);
+        try {
+            ButtonPress(ButtonX + 1, ButtonY);
+        } catch (IndexOutOfBoundsException ex) {}
+        try {
+            ButtonPress(ButtonX - 1, ButtonY);
+        } catch (IndexOutOfBoundsException ex) {}
+        try {
+            ButtonPress(ButtonX, ButtonY + 1);
+        } catch (IndexOutOfBoundsException ex) {}
+        try {
+            ButtonPress(ButtonX, ButtonY - 1);
+        } catch (IndexOutOfBoundsException ex){}
+        Clicks++;
+        ClicksLabel.setText(String.valueOf(Clicks));
+        ClicksLabel.revalidate();
+        ClicksLabel.repaint();
+    }
 
     public void DeleteButtons(){
         for(int i = 0; i < ButtonAmount; i++) {
@@ -67,6 +82,7 @@ class Buttons{
                 Panel.remove(Button[i][j]);
             }
         }
+        Panel.remove(ClicksLabel);
         Panel.revalidate();
         Panel.repaint();
     }
@@ -80,6 +96,8 @@ class Buttons{
                 }
             }
         }
+        Clicks = 0;
+        ClicksLabel.setText(String.valueOf(Clicks));
     }
 }
 
@@ -152,7 +170,7 @@ class Window{
         });
         ButtonPanel.add(Settings);
 
-        Randomize = new JButton();
+        Randomize = new JButton("rand");
         Randomize.setBounds(480, 10, 80, 80);
         Randomize.addActionListener(new AbstractAction() {
             @Override
