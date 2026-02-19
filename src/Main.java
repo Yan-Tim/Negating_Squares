@@ -76,7 +76,7 @@ class Buttons{
         for(int i = 0; i < ButtonAmount; i++){
             for(int j =0; j < ButtonAmount; j++){
                 if(1 == Chance.nextInt(2)){
-                    Button[i][j].doClick();
+                    CorrectButtonPress(i, j);
                 }
             }
         }
